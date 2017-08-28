@@ -1,0 +1,28 @@
+{
+  "name": "ubcapi",
+  "version": "1.0.0",
+  "description": "这是为UBC TOKEN Package提供的API服务。基于WEB3.js上的封装。",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isuekey/nodeIPCSever.git"
+  },
+  "keywords": [
+    "node",
+    "eth",
+    "token",
+    "web3"
+  ],
+  "author": "ubc",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/isuekey/nodeIPCSever/issues"
+  },
+  "homepage": "https://github.com/isuekey/nodeIPCSever#readme",
+  "dependencies": {
+    "redis": "^2.8.0"
+  }
+}
