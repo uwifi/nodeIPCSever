@@ -1,0 +1,535 @@
+{
+    "info": {
+        "version": "1.0.0",
+        "title": "UBC Bag API",
+        "contact": {
+            "name": "UBC BAG Team",
+            "url": "http://139.162.82.31"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://en.wikipedia.org/wiki/MIT_License"
+        }
+    },
+    "host": "139.162.82.31",
+    "basePath": "/ubc/bag",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/account/create": {
+            "post": {
+                "security": "public",
+                "operationId": "createUBCAccount",
+                "level":"2",
+                "parameters": [
+                    {
+                        "name": "account",
+                        "in": "body",
+                        "description": "邮件格式的账号",
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "body",
+                        "description": "账号的密码",
+                        "type": "string"
+                    },
+                    {
+                        "name": "withdraw",
+                        "in": "body",
+                        "description": "提现密码",
+                        "type": "string"
+                    }
+                ],
+                "summary": "创建一个UBC口袋的账号",
+                "responses": {
+                    "200": {
+                        "description": "账号名称",
+                        "schema": {
+                            "$ref": "#/definitions/Account"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/active/{confirmed-uuid}":{
+            "get": {
+                "security": "public",
+                "operationId": "activeAccount",
+                "summary": "激活用户账号",
+                "level":"2",
+                "parameters": [
+                    {
+                        "name": "confirmedUUID",
+                        "in": "path",
+                        "description": "账号激活",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "账号已经激活",
+                        "schema": {
+                            "msg": "账号已经激活"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/token":{
+            "post":{
+                "security":"public",
+                "level":"3"
+                "parameters":[
+                    {
+                        "name":"account",
+                        "in":"body",
+                        "description":"账号"
+                        "type":"string"
+                    },
+                    {
+                        "name":"password",
+                        "in":"body",
+                        "description":"密码"
+                        "type":"string"
+                    }
+                ],
+                "response":{
+                    "200": {
+                        "description": "登录授权",
+                        "schema": {
+                            "$ref": "#/definitions/Token"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/info":{
+            "put":{
+                "security": "authed",
+                "operationId": "updateAccountInfo",
+                "summary": "激活用户账号",
+                "level":"2",
+                "parameters": [
+                    {
+                        "name": "password",
+                        "in": "body",
+                        "description": "账号密码",
+                        "required": true
+                    },{
+                        "name": "appellation",
+                        "in": "body",
+                        "description": "账号称谓",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "修改成功",
+                        "schema": {
+                            "msg": "修改成功"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "get":{
+                "security": "authed",
+                "operationId": "queryAccountInfo",
+                "summary": "获取账号信息",
+                "level":"1",
+                "responses": {
+                    "200": {
+                        "description": "获取账号信息",
+                        "schema": {
+                            "$ref": "#/definitions/AccountInfo"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/item/transfer/external/{itemType}": {
+            "description":"外部转账",
+            "summary":"业务没有想清楚",
+            "get": {
+                "security": "authed",
+                "level":"1",
+                "description": "展示充值地址",
+                "operationId": "getMyTransferAddress",
+                "responses": {
+                    "200": {
+                        "description": "coupon template deleted"
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": "authed",
+                "level":"3",
+                "operationId": "transferCoinToExternal",
+                "description": "外部转账",
+                "summary": "业务场景不明朗，没有想清楚。会有变动",
+                "parameters":[
+                    "from":{
+                        "in":"body",
+                        "type":"string"
+                    },
+                    "to":{
+                        "in":"body",
+                        "type":"string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "转账提示",
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "name": "itemType",
+                    "in": "path",
+                    "description": "转币的类型",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },,
+        "/item/transfer/inner/{itemType}": {
+            "description":"转账",
+            "summary":"业务没有想清楚",
+            "get": {
+                "security": "authed",
+                "level":"1",
+                "description": "展示充值地址",
+                "operationId": "getMyTransferAddress",
+                "responses": {
+                    "200": {
+                        "description": "coupon template deleted"
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": "authed",
+                "level":"3",
+                "operationId": "transferCoinToExternal",
+                "description": "外部转账",
+                "summary": "业务场景不明朗，没有想清楚。会有变动",
+                "parameters":{
+                    "from":{
+                        "in":"body",
+                        "type":"string"
+                    },
+                    "to":{
+                        "in":"body",
+                        "type":"string"
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "转账提示",
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "name": "itemType",
+                    "in": "path",
+                    "description": "转币的类型",
+                    "required": true,
+                    "type": "string"
+                }
+            ]
+        },
+        "/account/confirm":{
+            "post":{
+                "security": "authed",
+                "level":"3",
+                "operationId": "transferCoinToExternal",
+                "description": "外部转账",
+                "summary": "业务场景不明朗，没有想清楚。会有变动",
+                "parameters":{
+                    "keys":{
+                        "type":"array",
+                        "schema":{
+                            "type":"string"
+                        },
+                        "in":"body"
+                    },
+                    "action":{
+                        "in":"body",
+                        "type":"string",
+                        "enum":[
+                            "create",
+                            "update"
+                        ]
+                    }
+                }
+            }
+        },
+        "/account/keystore/{itemType}":{
+            "post":{
+                "security": "authed",
+                "level":"3",
+                "operationId": "transferCoinToExternal",
+                "description": "外部转账",
+                "summary": "业务场景不明朗，没有想清楚。会有变动",
+                "parameters":{
+                    "keys":{
+                        "type":"array",
+                        "schema":{
+                            "type":"string"
+                        },
+                        "in":"body"
+                    },
+                    "itemType":{
+                        "in":"path",
+                        "type":"string"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Account": {
+            "properties": {
+                "id": {
+                    "description": "unique identifier for brand",
+                    "format": "int64",
+                    "type": "integer"
+                },
+                "appellation": {
+                    "description":"称呼",
+                    "type": "string"
+                },
+                "account": {
+                    "description":"账号",
+                    "type": "string"
+                },
+                "password": {
+                    "description":"密码",
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "updatedAt": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "accountType":{
+                    "enum": [
+                        "phone",
+                        "email",
+                        "appid"
+                    ],
+                    "type": "string"
+                    
+                },
+                "status": {
+                    "description": "Account status in the app",
+                    "enum": [
+                        "actived",
+                        "inactive",
+                        "locked",
+                        "deprecated"
+                    ],
+                    "type": "string"
+                }
+            },
+            "required": [
+                "account",
+                "password",
+                "accountType"
+            ]
+        },
+        "BagItem":{
+            "description": "UBC Bag的内容项",
+            "properties": {
+                "id": {
+                    "description": "unique identifier for bag item",
+                    "format": "int64",
+                    "type": "integer"
+                },
+                "appellation": {
+                    "description":"称呼",
+                    "type": "string"
+                },
+                "account": {
+                    "description":"账号",
+                    "type": "string"
+                },
+                "accountId": {
+                    "description":"账号ID",
+                    "type": "integer",
+                    "format":"int64"
+                },
+                "createdAt": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "updatedAt": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "itemType":{
+                    "type": "string"
+                    
+                },
+                "status": {
+                    "description": "代币状态",
+                    "enum": [
+                        "actived",
+                        "inactive",
+                        "locked",
+                        "deprecated"
+                    ],
+                    "type": "string"
+                },
+                "value":{
+                    "type":"double"
+                },
+                "address":{
+                    "description": "账号存储代币的地址",
+                    "type":"string"
+                },
+                "itemAddress":{
+                    "description": "代币地址",
+                    "type":"string"
+                }
+            }
+        },
+        "AccountInfo": {
+            "properties": {
+                "id": {
+                    "description": "unique identifier for brand",
+                    "format": "int64",
+                    "type": "integer"
+                },
+                "appellation": {
+                    "description":"称呼",
+                    "type": "string"
+                },
+                "account": {
+                    "description":"账号",
+                    "type": "string"
+                },
+                "password": {
+                    "description":"密码",
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "updatedAt": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "accountType":{
+                    "enum": [
+                        "phone",
+                        "email",
+                        "appid"
+                    ],
+                    "type": "string"
+                    
+                },
+                "status": {
+                    "description": "Account status in the app",
+                    "enum": [
+                        "actived",
+                        "inactive",
+                        "locked",
+                        "deprecated"
+                    ],
+                    "type": "string"
+                },
+                "items":{
+                    "type":"array",
+                    "$ref":"#/definitions/BagItem"
+                }
+            },
+            "required": [
+                "account",
+                "password",
+                "accountType"
+            ]
+        },
+        "Error": {
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "produces": [
+        "application/json",
+        "application/xml",
+        "text/plain",
+        "text/html"
+    ]
+}
