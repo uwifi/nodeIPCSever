@@ -21,7 +21,7 @@ app.post('/ubc/bag/account/token', app.oauth.token());
 
 
 //-- public
-app.post('/ubc/bag/account/create', ControllerAccount.createUBCAccount());
+app.post('/ubc/bag/account/create', ControllerAccount.createUBCAccount);
 
 
 //-- public end

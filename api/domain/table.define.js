@@ -6,7 +6,8 @@ const KEYS = require("../models/oauth2.model").KEYS;
 
 var DomainAccount = sequelize.define("t_account", {
     account: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        unique: true
     },
     appellation: {
         type: Sequelize.STRING
@@ -36,7 +37,7 @@ var DomainAccount = sequelize.define("t_account", {
         type: Sequelize.STRING
     },
     accountType: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         field: "account_type"
     }
 });
