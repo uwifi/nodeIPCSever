@@ -20,3 +20,12 @@
 
 # 接口说明 #
 参考文件 api.define.json
+
+# 环境初始化 #
+这里认为环境已经安装好
+
+## 数据库 ##
+  * createuser -P ubcbag -U postgres
+  * createdb -O ubcbag ubcbag -U postgres
+  
+

@@ -88,5 +88,20 @@ model.getUser = function (username, password, callback) {
         });
     });
 };
+model.saveToken = function(token, client, user) {
+  var data = {
+    accessToken: token.accessToken,
+    accessTokenExpiresAt: token.accessTokenExpiresAt,
+    clientId: client.id,
+    refreshToken: token.refreshToken,
+    refreshTokenExpiresAt: token.refreshTokenExpiresAt,
+    userId: user.id
+  };
+
+  return Promise.all([
+      db.hmset(`${KEYS.TOKEN}${token.accessToken}`, data),
+      db.hmset(`${KEYS.token}${token.refreshToken}`, data)
+  ]).return(data);
+};
 
 model.KEYS = KEYS;

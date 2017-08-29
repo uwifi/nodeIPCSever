@@ -40,6 +40,12 @@
                         "in": "body",
                         "description": "提现密码",
                         "type": "string"
+                    },
+                    {
+                        "name": "appellation",
+                        "in": "body",
+                        "description": "提现密码",
+                        "type": "string"
                     }
                 ],
                 "summary": "创建一个UBC口袋的账号",
