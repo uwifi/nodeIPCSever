@@ -44,7 +44,7 @@
                     {
                         "name": "appellation",
                         "in": "body",
-                        "description": "提现密码",
+                        "description": "昵称",
                         "type": "string"
                     }
                 ],
