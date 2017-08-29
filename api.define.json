@@ -97,13 +97,13 @@
                     {
                         "name":"account",
                         "in":"body",
-                        "description":"账号"
+                        "description":"账号",
                         "type":"string"
                     },
                     {
                         "name":"password",
                         "in":"body",
-                        "description":"密码"
+                        "description":"密码",
                         "type":"string"
                     }
                 ],
