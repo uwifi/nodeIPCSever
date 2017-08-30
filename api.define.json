@@ -21,9 +21,8 @@
             "post": {
                 "security": "public",
                 "operationId": "createUBCAccount",
-                "level":"2",
-                "parameters": [
-                    {
+                "level": "2",
+                "parameters": [{
                         "name": "account",
                         "in": "body",
                         "description": "邮件格式的账号",
@@ -65,20 +64,18 @@
                 }
             }
         },
-        "/account/active/{confirmed-uuid}":{
+        "/account/active/{confirmed-uuid}": {
             "get": {
                 "security": "public",
                 "operationId": "activeAccount",
                 "summary": "激活用户账号",
-                "level":"2",
-                "parameters": [
-                    {
-                        "name": "confirmedUUID",
-                        "in": "path",
-                        "description": "账号激活",
-                        "required": true
-                    }
-                ],
+                "level": "2",
+                "parameters": [{
+                    "name": "confirmedUUID",
+                    "in": "path",
+                    "description": "账号激活",
+                    "required": true
+                }],
                 "responses": {
                     "200": {
                         "description": "账号已经激活",
@@ -95,25 +92,24 @@
                 }
             }
         },
-        "/account/token":{
-            "post":{
-                "security":"public",
-                "level":"3"
-                "parameters":[
-                    {
-                        "name":"account",
-                        "in":"body",
-                        "description":"账号",
-                        "type":"string"
+        "/account/token": {
+            "post": {
+                "security": "public",
+                "level": "3",
+                "parameters": [{
+                        "name": "username",
+                        "in": "body",
+                        "description": "账号",
+                        "type": "string"
                     },
                     {
-                        "name":"password",
-                        "in":"body",
-                        "description":"密码",
-                        "type":"string"
+                        "name": "password",
+                        "in": "body",
+                        "description": "密码",
+                        "type": "string"
                     }
                 ],
-                "response":{
+                "response": {
                     "200": {
                         "description": "登录授权",
                         "schema": {
@@ -129,25 +125,23 @@
                 }
             }
         },
-        "/account/info":{
-            "put":{
+        "/account/info": {
+            "put": {
                 "security": "authed",
                 "operationId": "updateAccountInfo",
                 "summary": "激活用户账号",
-                "level":"2",
-                "parameters": [
-                    {
-                        "name": "password",
-                        "in": "body",
-                        "description": "账号密码",
-                        "required": true
-                    },{
-                        "name": "appellation",
-                        "in": "body",
-                        "description": "账号称谓",
-                        "required": true
-                    }
-                ],
+                "level": "2",
+                "parameters": [{
+                    "name": "password",
+                    "in": "body",
+                    "description": "账号密码",
+                    "required": true
+                }, {
+                    "name": "appellation",
+                    "in": "body",
+                    "description": "账号称谓",
+                    "required": true
+                }],
                 "responses": {
                     "200": {
                         "description": "修改成功",
@@ -163,11 +157,11 @@
                     }
                 }
             },
-            "get":{
+            "get": {
                 "security": "authed",
                 "operationId": "queryAccountInfo",
                 "summary": "获取账号信息",
-                "level":"1",
+                "level": "1",
                 "responses": {
                     "200": {
                         "description": "获取账号信息",
@@ -185,11 +179,11 @@
             }
         },
         "/item/transfer/external/{itemType}": {
-            "description":"外部转账",
-            "summary":"业务没有想清楚",
+            "description": "外部转账",
+            "summary": "业务没有想清楚",
             "get": {
                 "security": "authed",
-                "level":"1",
+                "level": "1",
                 "description": "展示充值地址",
                 "operationId": "getMyTransferAddress",
                 "responses": {
@@ -206,18 +200,18 @@
             },
             "post": {
                 "security": "authed",
-                "level":"3",
+                "level": "3",
                 "operationId": "transferCoinToExternal",
                 "description": "外部转账",
                 "summary": "业务场景不明朗，没有想清楚。会有变动",
-                "parameters":[
-                    "from":{
-                        "in":"body",
-                        "type":"string"
+                "parameters": [
+                    "from": {
+                        "in": "body",
+                        "type": "string"
                     },
-                    "to":{
-                        "in":"body",
-                        "type":"string"
+                    "to": {
+                        "in": "body",
+                        "type": "string"
                     }
                 ],
                 "responses": {
@@ -232,22 +226,21 @@
                     }
                 }
             },
-            "parameters": [
-                {
-                    "name": "itemType",
-                    "in": "path",
-                    "description": "转币的类型",
-                    "required": true,
-                    "type": "string"
-                }
-            ]
-        },,
+            "parameters": [{
+                "name": "itemType",
+                "in": "path",
+                "description": "转币的类型",
+                "required": true,
+                "type": "string"
+            }]
+        },
+        ,
         "/item/transfer/inner/{itemType}": {
-            "description":"转账",
-            "summary":"业务没有想清楚",
+            "description": "转账",
+            "summary": "业务没有想清楚",
             "get": {
                 "security": "authed",
-                "level":"1",
+                "level": "1",
                 "description": "展示充值地址",
                 "operationId": "getMyTransferAddress",
                 "responses": {
@@ -264,18 +257,18 @@
             },
             "post": {
                 "security": "authed",
-                "level":"3",
+                "level": "3",
                 "operationId": "transferCoinToExternal",
                 "description": "外部转账",
                 "summary": "业务场景不明朗，没有想清楚。会有变动",
-                "parameters":{
-                    "from":{
-                        "in":"body",
-                        "type":"string"
+                "parameters": {
+                    "from": {
+                        "in": "body",
+                        "type": "string"
                     },
-                    "to":{
-                        "in":"body",
-                        "type":"string"
+                    "to": {
+                        "in": "body",
+                        "type": "string"
                     }
                 },
                 "responses": {
@@ -290,35 +283,33 @@
                     }
                 }
             },
-            "parameters": [
-                {
-                    "name": "itemType",
-                    "in": "path",
-                    "description": "转币的类型",
-                    "required": true,
-                    "type": "string"
-                }
-            ]
+            "parameters": [{
+                "name": "itemType",
+                "in": "path",
+                "description": "转币的类型",
+                "required": true,
+                "type": "string"
+            }]
         },
-        "/account/confirm":{
-            "post":{
+        "/account/confirm": {
+            "post": {
                 "security": "authed",
-                "level":"3",
+                "level": "3",
                 "operationId": "transferCoinToExternal",
                 "description": "外部转账",
                 "summary": "业务场景不明朗，没有想清楚。会有变动",
-                "parameters":{
-                    "keys":{
-                        "type":"array",
-                        "schema":{
-                            "type":"string"
+                "parameters": {
+                    "keys": {
+                        "type": "array",
+                        "schema": {
+                            "type": "string"
                         },
-                        "in":"body"
+                        "in": "body"
                     },
-                    "action":{
-                        "in":"body",
-                        "type":"string",
-                        "enum":[
+                    "action": {
+                        "in": "body",
+                        "type": "string",
+                        "enum": [
                             "create",
                             "update"
                         ]
@@ -326,24 +317,24 @@
                 }
             }
         },
-        "/account/keystore/{itemType}":{
-            "post":{
+        "/account/keystore/{itemType}": {
+            "post": {
                 "security": "authed",
-                "level":"3",
+                "level": "3",
                 "operationId": "transferCoinToExternal",
                 "description": "外部转账",
                 "summary": "业务场景不明朗，没有想清楚。会有变动",
-                "parameters":{
-                    "keys":{
-                        "type":"array",
-                        "schema":{
-                            "type":"string"
+                "parameters": {
+                    "keys": {
+                        "type": "array",
+                        "schema": {
+                            "type": "string"
                         },
-                        "in":"body"
+                        "in": "body"
                     },
-                    "itemType":{
-                        "in":"path",
-                        "type":"string"
+                    "itemType": {
+                        "in": "path",
+                        "type": "string"
                     }
                 }
             }
@@ -358,15 +349,15 @@
                     "type": "integer"
                 },
                 "appellation": {
-                    "description":"称呼",
+                    "description": "称呼",
                     "type": "string"
                 },
                 "account": {
-                    "description":"账号",
+                    "description": "账号",
                     "type": "string"
                 },
                 "password": {
-                    "description":"密码",
+                    "description": "密码",
                     "type": "string"
                 },
                 "createdAt": {
@@ -377,14 +368,14 @@
                     "type": "integer",
                     "format": "int64"
                 },
-                "accountType":{
+                "accountType": {
                     "enum": [
                         "phone",
                         "email",
                         "appid"
                     ],
                     "type": "string"
-                    
+
                 },
                 "status": {
                     "description": "Account status in the app",
@@ -403,7 +394,7 @@
                 "accountType"
             ]
         },
-        "BagItem":{
+        "BagItem": {
             "description": "UBC Bag的内容项",
             "properties": {
                 "id": {
@@ -412,17 +403,17 @@
                     "type": "integer"
                 },
                 "appellation": {
-                    "description":"称呼",
+                    "description": "称呼",
                     "type": "string"
                 },
                 "account": {
-                    "description":"账号",
+                    "description": "账号",
                     "type": "string"
                 },
                 "accountId": {
-                    "description":"账号ID",
+                    "description": "账号ID",
                     "type": "integer",
-                    "format":"int64"
+                    "format": "int64"
                 },
                 "createdAt": {
                     "type": "integer",
@@ -432,9 +423,9 @@
                     "type": "integer",
                     "format": "int64"
                 },
-                "itemType":{
+                "itemType": {
                     "type": "string"
-                    
+
                 },
                 "status": {
                     "description": "代币状态",
@@ -446,16 +437,16 @@
                     ],
                     "type": "string"
                 },
-                "value":{
-                    "type":"double"
+                "value": {
+                    "type": "double"
                 },
-                "address":{
+                "address": {
                     "description": "账号存储代币的地址",
-                    "type":"string"
+                    "type": "string"
                 },
-                "itemAddress":{
+                "itemAddress": {
                     "description": "代币地址",
-                    "type":"string"
+                    "type": "string"
                 }
             }
         },
@@ -467,15 +458,15 @@
                     "type": "integer"
                 },
                 "appellation": {
-                    "description":"称呼",
+                    "description": "称呼",
                     "type": "string"
                 },
                 "account": {
-                    "description":"账号",
+                    "description": "账号",
                     "type": "string"
                 },
                 "password": {
-                    "description":"密码",
+                    "description": "密码",
                     "type": "string"
                 },
                 "createdAt": {
@@ -486,14 +477,14 @@
                     "type": "integer",
                     "format": "int64"
                 },
-                "accountType":{
+                "accountType": {
                     "enum": [
                         "phone",
                         "email",
                         "appid"
                     ],
                     "type": "string"
-                    
+
                 },
                 "status": {
                     "description": "Account status in the app",
@@ -505,9 +496,9 @@
                     ],
                     "type": "string"
                 },
-                "items":{
-                    "type":"array",
-                    "$ref":"#/definitions/BagItem"
+                "items": {
+                    "type": "array",
+                    "$ref": "#/definitions/BagItem"
                 }
             },
             "required": [

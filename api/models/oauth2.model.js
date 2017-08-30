@@ -1,107 +1,90 @@
-var model = module.exports,
-    redis = require('redis');
-
-var db = redis.createClient();
+var model = module.exports;
+var bluebird = require('bluebird');
+var redisdb = require('redis');
+var db = redisdb.createClient();
+bluebird.promisifyAll(redisdb.RedisClient.prototype);
+bluebird.promisifyAll(redisdb.Multi.prototype);
 
 const KEYS = {
-    token:"token:",
-    client:"clients:",
-    refreshToken:"refresh_token:",
-    grantTypes:":grant_types",
-    user:"users:"
+    token: "token:",
+    client: "clients:",
+    refreshToken: "refresh_token:",
+    grantTypes: ":grant_types",
+    user: "users:"
 };
 
-model.getAccessToken = function (bearerToken, callback) {
-    db.hgetall(`${KEYS.token}${bearerToken}`, function (err, token) {
-        if (err) return callback(err);
-
-        if (!token) return callback();
-
-        return callback(null, {
+model.getAccessToken = function(bearerToken) {
+    return db.hgetallAsync(`${KEYS.token}${bearerToken}`).then((token) => {
+        if (!token) {
+            return;
+        };
+        return {
             accessToken: token.accessToken,
             clientId: token.clientId,
-            expires: token.expires ? new Date(token.expires) : null,
+            expires: token.accessTokenExpiresOn,
             userId: token.userId
-        });
+        };
     });
 };
 
-model.getClient = function (clientId, clientSecret, callback) {
+model.getClient = function(clientId, clientSecret) {
     let key = `${KEYS.client}${clientId}`;
-    db.hgetall(key, function (err, client) {
-        if (err) return callback(err);
-
-        if (!client || client.clientSecret !== clientSecret) return callback();
-
-        return callback(null, {
+    return db.hgetallAsync(key).then((client) => {
+        if (!client || client.clientSecret !== clientSecret) return;
+        return {
             clientId: client.clientId,
-            clientSecret: client.clientSecret
-        });
+            clientSecret: client.clientSecret,
+            grants: ["password", "refresh_token"]
+        };
     });
 };
 
-model.getRefreshToken = function (bearerToken, callback) {
-    db.hgetall(`${KEYS.refreshToken}${bearerToken}`, function (err, token) {
-        if (err) return callback(err);
-
-        if (!token) return callback();
-
-        return callback(null, {
-            refreshToken: token.accessToken,
+model.getRefreshToken = function(bearerToken) {
+    return db.hgetallAsync(`${KEYS.refreshToken}${bearerToken}`).then((token) => {
+        if (!token) return;
+        return {
             clientId: token.clientId,
-            expires: token.expires ? new Date(token.expires) : null,
+            expires: token.refreshTokenExpiresOn,
+            refreshToken: token.accessToken,
             userId: token.userId
-        });
+        };
     });
 };
 
-model.grantTypeAllowed = function (clientId, grantType, callback) {
-    db.sismember(`${KEYS.client}${clientId}${KEYS.grantTypes}`, grantType, callback);
-};
 
-model.saveAccessToken = function (accessToken, clientId, expires, user, callback) {
-    db.hmset(`${KEYS.token}${accessToken}`, {
-        accessToken: accessToken,
-        clientId: clientId,
-        expires: expires ? expires.toISOString() : null,
-        userId: user.id
-    }, callback);
-};
-
-model.saveRefreshToken = function (refreshToken, clientId, expires, user, callback) {
-    db.hmset(`${KEYS.refreshToken}${refreshToken}`, {
-        refreshToken: refreshToken,
-        clientId: clientId,
-        expires: expires ? expires.toISOString() : null,
-        userId: user.id
-    }, callback);
-};
-
-model.getUser = function (username, password, callback) {
-    db.hgetall(`${KEYS.user}${username}`, function (err, user) {
-        if (err) return callback(err);
-
-        if (!user || password !== user.password) return callback();
-
-        return callback(null, {
+model.getUser = function(username, password) {
+    let key = `${KEYS.user}${username}`;
+    console.log(key);
+    return db.hgetallAsync(key).then((user) => {
+        if (!user || password !== user.password) {
+            return;
+        }
+        return {
             id: username
-        });
+        };
     });
 };
-model.saveToken = function(token, client, user) {
-  var data = {
-    accessToken: token.accessToken,
-    accessTokenExpiresAt: token.accessTokenExpiresAt,
-    clientId: client.id,
-    refreshToken: token.refreshToken,
-    refreshTokenExpiresAt: token.refreshTokenExpiresAt,
-    userId: user.id
-  };
 
-  return Promise.all([
-      db.hmset(`${KEYS.TOKEN}${token.accessToken}`, data),
-      db.hmset(`${KEYS.token}${token.refreshToken}`, data)
-  ]).return(data);
+/**
+ * Save token.
+ */
+
+model.saveToken = function(token, client, user) {
+    var data = {
+        accessToken: token.accessToken,
+        accessTokenExpiresAt: token.accessTokenExpiresAt,
+        client,
+        refreshToken: token.refreshToken,
+        refreshTokenExpiresAt: token.refreshTokenExpiresAt,
+        user
+    };
+
+    return Promise.all([
+        db.hmsetAsync(`${KEYS.token}${token.accessToken}`, data),
+        db.hmsetAsync(`${KEYS.token}${token.refreshToken}`, data)
+    ]).then(() => {
+        return data;
+    });
 };
 
 model.KEYS = KEYS;

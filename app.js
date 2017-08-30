@@ -2,12 +2,12 @@
 
 const express = require("express"),
     bodyParser = require("body-parser"),
-      oauthserver = require("express-oauth-server");
+    oauthserver = require("express-oauth-server");
 const ControllerAccount = require("./api/controllers/account_controller").ControllerAccount;
 
 var app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.oauth = new oauthserver({
     model: require('./api/models/oauth2.model')

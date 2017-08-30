@@ -2,14 +2,14 @@ var Sequelize = require('sequelize');
 const KEYS = require("../models/oauth2.model").KEYS;
 
 var sequelize = new Sequelize('ubcbag', 'ubcbag', 'ubcbag', {
-    host:"localhost",
+    host: "localhost",
     logging: true,
     define: {
         freezeTableName: true,
         underscored: true
 
     },
-    dialect:'postgres'
+    dialect: 'postgres'
 });
 
 var bluebird = require('bluebird');
@@ -27,15 +27,12 @@ require('pg').types.setTypeParser(1114, stringValue => {
 /**
 初始化数据
 **/
-const APP= "UBCBag";
-redis.hmset(`${KEYS.client}${APP}`,{
-    clientId:'ubcbag',
-    clientSecret:'d2lmaWN1cnJlb'
-    
+const APP = "ubcbag";
+redis.hmset(`${KEYS.client}${APP}`, {
+    clientId: APP,
+    clientSecret: 'd2lmaWN1cnJlb'
+
 });
-let grantKeys = `${KEYS.client}${APP}${KEYS.grantTypes}`;
-redis.sadd(grantKeys, "password");
-redis.sadd(grantKeys, "refresh_token");
 
 
 exports.sequelize = sequelize;
