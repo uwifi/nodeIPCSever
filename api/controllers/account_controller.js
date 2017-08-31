@@ -35,9 +35,9 @@ function checkoutAccount(account) {
     });
 }
 
-ControllerAccount.createBagItem = function createUBCAccount(req, res) {
+ControllerAccount.createAccountBagItem = function createAccountBagItem(req, res) {
     console.log(req);
-    let bagItem
+    let accountItem =
 }
 
 

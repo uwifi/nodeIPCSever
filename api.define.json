@@ -136,11 +136,28 @@
                     "name": "walletType",
                     "in": "body",
                     "description": "钱包类型-公链钱包",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }, {
                     "name": "password",
                     "in": "body",
                     "description": "密码",
+                    "type": "string",
+                    "required": true
+                }, {
+                    "name": "appellation",
+                    "in": "body",
+                    "description": "名称",
+                    "type": "string"
+                }, {
+                    "name": "symbol",
+                    "in": "body",
+                    "description": "标示",
+                    "type": "string"
+                }, {
+                    "name": "icon",
+                    "in": "body",
+                    "description": "url",
                     "type": "string"
                 }],
                 "response": {
