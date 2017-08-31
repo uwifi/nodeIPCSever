@@ -41,10 +41,45 @@ var DomainAccount = sequelize.define("t_account", {
         field: "account_type"
     }
 });
+var DomainBagProject = sequelize.define("t_bag_project", {
+    projectAppellation: {
+        type: Sequelize.STRING,
+        field: "appellation"
+    },
+    symbol: {
+        type: Sequelize.STRING
+    },
+    icon: {
+        type: Sequelize.STRING
+    },
+    createdAt: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+        field: "created_at"
+    },
+    updatedAt: {
+        type: Sequelize.DATE,
+        field: "updated_at"
+    },
+    status: {
+        type: Sequelize.STRING
+    },
+    decimals: {
+        type: Sequelize.INTEGER
+    },
+    publicType: {
+        type: Sequelize.STRING,
+        field: "public_type"
+    },
+    checkUrl: {
+        type: Sequelize.STRING,
+        field: "check_url"
+    }
+});
 var DomainBagItem = sequelize.define("t_bag_item", {
     itemAppellation: {
         type: Sequelize.STRING,
-        field:"appellation"
+        field: "appellation"
     },
     symbol: {
         type: Sequelize.STRING
@@ -67,40 +102,27 @@ var DomainBagItem = sequelize.define("t_bag_item", {
     address: {
         type: Sequelize.STRING
     },
-    publicType: {
+    bagProject: {
         type: Sequelize.STRING,
-        field:"public_type"
+        field: "bag_project"
     },
-    typeInChain: {
+    projectAppellation: {
         type: Sequelize.STRING,
-        field:"type_in_chain"
+        field: "project_appellation"
     }
 });
-
-var DomainAccountItem = sequelize.define("t_account_item", {
-    itemAppellation: {
+var DomainAccountProject = sequelize.define("t_account_bag_project", {
+    projectAppellation: {
         type: Sequelize.STRING,
-        field:"appellation"
+        field: "appellation"
     },
-    itemSymbol: {
+    projectSymbol: {
         type: Sequelize.STRING,
-        field:"item_symbol"
+        field: "project_symbol"
     },
-    itemIcon: {
+    projectIcon: {
         type: Sequelize.STRING,
-        field:"item_icon"
-    },
-    itemAddress: {
-        type: Sequelize.STRING,
-        field:"item_address"
-    },
-    publicType: {
-        type: Sequelize.STRING,
-        field:"public_type"
-    },
-    typeInChain: {
-        type: Sequelize.STRING,
-        field:"type_in_chain"
+        field: "project_icon"
     },
     createdAt: {
         type: Sequelize.DATE,
@@ -114,40 +136,36 @@ var DomainAccountItem = sequelize.define("t_account_item", {
     status: {
         type: Sequelize.STRING
     },
-    accountAddress:{
+    accountAddress: {
         type: Sequelize.STRING,
-        field:"account_address"
+        field: "account_address"
     },
-    accountValue:{
+    accountValue: {
         type: Sequelize.DOUBLE,
-        field:"account_value"
+        field: "account_value"
     }
 });
 
-var DomainAccountItemKeyStore = sequelize.define("t_account_item", {
+var DomainAccountItem = sequelize.define("t_account_bag_item", {
     itemAppellation: {
         type: Sequelize.STRING,
-        field:"appellation"
+        field: "appellation"
     },
     itemSymbol: {
         type: Sequelize.STRING,
-        field:"item_symbol"
+        field: "item_symbol"
     },
     itemIcon: {
         type: Sequelize.STRING,
-        field:"item_icon"
+        field: "item_icon"
     },
     itemAddress: {
         type: Sequelize.STRING,
-        field:"item_address"
+        field: "item_address"
     },
     publicType: {
-        type: Sequelize.STRING,
-        field:"public_type"
-    },
-    typeInChain: {
-        type: Sequelize.STRING,
-        field:"type_in_chain"
+        type: Sequelize.INTEGER,
+        field: "public_type"
     },
     createdAt: {
         type: Sequelize.DATE,
@@ -161,31 +179,78 @@ var DomainAccountItemKeyStore = sequelize.define("t_account_item", {
     status: {
         type: Sequelize.STRING
     },
-    accountAddress:{
+    accountAddress: {
         type: Sequelize.STRING,
-        field:"account_address"
+        field: "account_address"
     },
-    keyStore:{
+    accountValue: {
+        type: Sequelize.DOUBLE,
+        field: "account_value"
+    }
+});
+
+var DomainAccountItemKeyStore = sequelize.define("t_account_keystore", {
+    itemAppellation: {
+        type: Sequelize.STRING,
+        field: "appellation"
+    },
+    itemSymbol: {
+        type: Sequelize.STRING,
+        field: "item_symbol"
+    },
+    itemIcon: {
+        type: Sequelize.STRING,
+        field: "item_icon"
+    },
+    itemAddress: {
+        type: Sequelize.STRING,
+        field: "item_address"
+    },
+    publicType: {
+        type: Sequelize.STRING,
+        field: "public_type"
+    },
+    typeInChain: {
+        type: Sequelize.STRING,
+        field: "type_in_chain"
+    },
+    createdAt: {
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.NOW,
+        field: "created_at"
+    },
+    updatedAt: {
+        type: Sequelize.DATE,
+        field: "updated_at"
+    },
+    status: {
+        type: Sequelize.STRING
+    },
+    accountAddress: {
+        type: Sequelize.STRING,
+        field: "account_address"
+    },
+    keyStore: {
         type: Sequelize.JSON,
-        field:"key_store"
+        field: "key_store"
     }
 });
 //各种交易表，根据需要添加
 
 
-sequelize.sync({force: false}).then(()=>{
-    DomainAccount.findOne().then((accountInstance)=>{
-        if(accountInstance == undefined){
+sequelize.sync({ force: false }).then(() => {
+    DomainAccount.findOne().then((accountInstance) => {
+        if (accountInstance == undefined) {
             return DomainAccount.create({
-                account:"amdin",
-                appellation:"admin",
-                password:"admin#20170829#ubc",
-                accountType:"admin"
+                account: "amdin",
+                appellation: "admin",
+                password: "admin#20170829#ubc",
+                accountType: "admin"
             });
-        }else{
+        } else {
             return accountInstance;
         }
-    }).then((accountInstance)=>{
+    }).then((accountInstance) => {
         let account = accountInstance.toJSON();
         account.username = account.account;
         console.log('==================================PARAMETER=====================================');

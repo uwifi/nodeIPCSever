@@ -97,23 +97,57 @@
                 "security": "public",
                 "level": "3",
                 "parameters": [{
-                        "name": "username",
-                        "in": "body",
-                        "description": "账号",
-                        "type": "string"
-                    },
-                    {
-                        "name": "password",
-                        "in": "body",
-                        "description": "密码",
-                        "type": "string"
-                    }
-                ],
+                    "name": "username",
+                    "in": "form-urlencode",
+                    "description": "账号",
+                    "type": "string"
+                }, {
+                    "name": "password",
+                    "in": "form-urlencode",
+                    "description": "密码",
+                    "type": "string"
+                }, {
+                    "name": "grant_type",
+                    "in": "form-urlencode",
+                    "description": "授权",
+                    "type": "string"
+                }],
                 "response": {
                     "200": {
                         "description": "登录授权",
                         "schema": {
                             "$ref": "#/definitions/Token"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/wallet": {
+            "post": {
+                "security": "authed",
+                "level": "3",
+                "parameters": [{
+                    "name": "walletType",
+                    "in": "body",
+                    "description": "钱包类型-公链钱包",
+                    "type": "string"
+                }, {
+                    "name": "password",
+                    "in": "body",
+                    "description": "密码",
+                    "type": "string"
+                }],
+                "response": {
+                    "200": {
+                        "description": "创建的钱包信息",
+                        "schema": {
+                            "$ref": "#/definitions/BagProject"
                         }
                     },
                     "default": {
@@ -204,7 +238,7 @@
                 "operationId": "transferCoinToExternal",
                 "description": "外部转账",
                 "summary": "业务场景不明朗，没有想清楚。会有变动",
-                "parameters": [
+                "parameters": {
                     "from": {
                         "in": "body",
                         "type": "string"
@@ -213,10 +247,10 @@
                         "in": "body",
                         "type": "string"
                     }
-                ],
+                },
                 "responses": {
                     "200": {
-                        "description": "转账提示",
+                        "description": "转账提示"
                     },
                     "default": {
                         "description": "Unexpected error",
@@ -234,7 +268,6 @@
                 "type": "string"
             }]
         },
-        ,
         "/item/transfer/inner/{itemType}": {
             "description": "转账",
             "summary": "业务没有想清楚",
@@ -273,7 +306,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "转账提示",
+                        "description": "转账提示"
                     },
                     "default": {
                         "description": "Unexpected error",
@@ -394,7 +427,7 @@
                 "accountType"
             ]
         },
-        "BagItem": {
+        "BagProject": {
             "description": "UBC Bag的内容项",
             "properties": {
                 "id": {
@@ -425,7 +458,6 @@
                 },
                 "itemType": {
                     "type": "string"
-
                 },
                 "status": {
                     "description": "代币状态",
@@ -444,9 +476,9 @@
                     "description": "账号存储代币的地址",
                     "type": "string"
                 },
-                "itemAddress": {
-                    "description": "代币地址",
-                    "type": "string"
+                "items": {
+                    "type": "array",
+                    "$ref": "#/definitions/BagProject"
                 }
             }
         },

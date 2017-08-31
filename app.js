@@ -16,6 +16,7 @@ app.oauth = new oauthserver({
 app.post('/ubc/bag/account/token', app.oauth.token());
 
 //-- authed
+app.post('/ubc/bag/account/wallet', ControllerAccount.createBagItem);
 
 //-- authed end
 
