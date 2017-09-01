@@ -4,7 +4,9 @@ const redis = require('./ubc.prepare').redis;
 
 const KEYS = require("../models/oauth2.model").KEYS;
 
-var DomainAccount = sequelize.define("t_account", {
+var model = module.exports;
+
+model.DomainAccount = sequelize.define("t_account", {
     account: {
         type: Sequelize.STRING,
         unique: true
@@ -41,7 +43,7 @@ var DomainAccount = sequelize.define("t_account", {
         field: "account_type"
     }
 });
-var DomainBagProject = sequelize.define("t_bag_project", {
+model.DomainBagProject = sequelize.define("t_bag_project", {
     projectAppellation: {
         type: Sequelize.STRING,
         field: "appellation"
@@ -76,7 +78,7 @@ var DomainBagProject = sequelize.define("t_bag_project", {
         field: "check_url"
     }
 });
-var DomainBagItem = sequelize.define("t_bag_item", {
+model.DomainBagItem = sequelize.define("t_bag_item", {
     itemAppellation: {
         type: Sequelize.STRING,
         field: "appellation"
@@ -111,7 +113,7 @@ var DomainBagItem = sequelize.define("t_bag_item", {
         field: "project_appellation"
     }
 });
-var DomainAccountProject = sequelize.define("t_account_bag_project", {
+model.DomainAccountProject = sequelize.define("t_account_bag_project", {
     projectAppellation: {
         type: Sequelize.STRING,
         field: "appellation"
@@ -146,7 +148,7 @@ var DomainAccountProject = sequelize.define("t_account_bag_project", {
     }
 });
 
-var DomainAccountItem = sequelize.define("t_account_bag_item", {
+model.DomainAccountItem = sequelize.define("t_account_bag_item", {
     itemAppellation: {
         type: Sequelize.STRING,
         field: "appellation"
@@ -189,7 +191,7 @@ var DomainAccountItem = sequelize.define("t_account_bag_item", {
     }
 });
 
-var DomainAccountItemKeyStore = sequelize.define("t_account_keystore", {
+model.DomainAccountItemKeyStore = sequelize.define("t_account_keystore", {
     itemAppellation: {
         type: Sequelize.STRING,
         field: "appellation"
@@ -239,10 +241,10 @@ var DomainAccountItemKeyStore = sequelize.define("t_account_keystore", {
 
 
 sequelize.sync({ force: false }).then(() => {
-    DomainAccount.findOne().then((accountInstance) => {
+    model.DomainAccount.findOne().then((accountInstance) => {
         if (accountInstance == undefined) {
-            return DomainAccount.create({
-                account: "amdin",
+            return model.DomainAccount.create({
+                account: "admin",
                 appellation: "admin",
                 password: "admin#20170829#ubc",
                 accountType: "admin"
@@ -252,14 +254,20 @@ sequelize.sync({ force: false }).then(() => {
         }
     }).then((accountInstance) => {
         let account = accountInstance.toJSON();
-        account.username = account.account;
+        let ar = {
+            username: account.account,
+            password: account.password,
+            accountId: account.id
+        };
         console.log('==================================PARAMETER=====================================');
-        console.log(account);
+        console.log(ar);
+        let adminkey = `${KEYS.user}${account.account}`;
+        console.log(adminkey);
         console.log('==================================   END   =====================================');
-        return redis.hmsetAsync(`${KEYS.user}${account.account}`, account);
+        return redis.hmsetAsync(adminkey, ar);
+    }).then((info) => {
+        console.log(`update redis ok:${info}`)
+    }).catch((error) => {
+        console.log(`update redis error:${error}`);
     });
 });
-
-
-var model = module.exports;
-model.DomainAccount = DomainAccount;

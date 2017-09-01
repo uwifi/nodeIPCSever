@@ -31,10 +31,13 @@ const APP = "ubcbag";
 redis.hmset(`${KEYS.client}${APP}`, {
     clientId: APP,
     clientSecret: 'd2lmaWN1cnJlb'
-
 });
+const CONFIG = {
+
+}
 
 
 exports.sequelize = sequelize;
 exports.Sequelize = Sequelize;
 exports.redis = redis;
+exports.CONFIG = CONFIG;

@@ -10,7 +10,8 @@ const KEYS = {
     client: "clients:",
     refreshToken: "refresh_token:",
     grantTypes: ":grant_types",
-    user: "users:"
+    user: "users:",
+    controller: "controllers:"
 };
 
 model.getAccessToken = function(bearerToken) {
@@ -18,11 +19,14 @@ model.getAccessToken = function(bearerToken) {
         if (!token) {
             return;
         };
+        console.log(token);
         return {
             accessToken: token.accessToken,
-            clientId: token.clientId,
-            expires: token.accessTokenExpiresOn,
-            userId: token.userId
+            accessTokenExpiresAt: new Date(token.accessTokenExpiresAt),
+            client: token.client,
+            refreshToken: token.refreshToken,
+            refreshTokenExpiresAt: new Date(token.refreshTokenExpiresAt),
+            user: token.user
         };
     });
 };
@@ -60,7 +64,8 @@ model.getUser = function(username, password) {
             return;
         }
         return {
-            id: username
+            id: username,
+            accountId: user.accountId
         };
     });
 };
@@ -73,10 +78,10 @@ model.saveToken = function(token, client, user) {
     var data = {
         accessToken: token.accessToken,
         accessTokenExpiresAt: token.accessTokenExpiresAt,
-        client,
+        client: JSON.stringify(client),
         refreshToken: token.refreshToken,
         refreshTokenExpiresAt: token.refreshTokenExpiresAt,
-        user
+        user: JSON.stringify(user)
     };
 
     return Promise.all([

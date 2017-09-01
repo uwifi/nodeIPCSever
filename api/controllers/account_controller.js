@@ -1,9 +1,12 @@
 "use strict";
 
 const ModelAccount = require("../models/account.model");
+const redis = require('../domain/ubc.prepare').redis;
+const KEYS = require("../models/oauth2.model").KEYS;
 
 
 var ControllerAccount = module.exports;
+
 
 ControllerAccount.createUBCAccount = function createUBCAccount(req, res) {
     let account = req.body;
@@ -35,9 +38,25 @@ function checkoutAccount(account) {
     });
 }
 
-ControllerAccount.createAccountBagItem = function createAccountBagItem(req, res) {
-    console.log(req);
-    let accountItem =
+ControllerAccount.createAccountBagProject = function createAccountBagProject(req, res) {
+    let accountProject = req.body;
+    let authUser = JSON.parse(res.locals.oauth.token.user);
+    let controllerLockKey = `${KEYS.controller}post/ubc/bag/account/wallet:${authUser.accountId}`;
+    console.log(controllerLockKey);
+    return redis.hgetAsync(controllerLockKey).then((locked) => {
+        if (locked) {
+            res.status(500);
+            res.json({
+                cold: 10002,
+                message: "正在请求创建钱包"
+            });
+        } else {
+            return ModelAccount.createAccountBagProject(controllerLockKey, authUser, accountProject, req, res);
+        }
+    }).catch((error) => {
+        res.status(500);
+        res.json(error);
+    })
 }
 
 
