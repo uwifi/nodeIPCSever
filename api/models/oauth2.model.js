@@ -19,7 +19,6 @@ model.getAccessToken = function(bearerToken) {
         if (!token) {
             return;
         };
-        console.log(token);
         return {
             accessToken: token.accessToken,
             accessTokenExpiresAt: new Date(token.accessTokenExpiresAt),
@@ -58,7 +57,6 @@ model.getRefreshToken = function(bearerToken) {
 
 model.getUser = function(username, password) {
     let key = `${KEYS.user}${username}`;
-    console.log(key);
     return db.hgetallAsync(key).then((user) => {
         if (!user || password !== user.password) {
             return;

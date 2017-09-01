@@ -38,12 +38,13 @@ function checkoutAccount(account) {
     });
 }
 
+
+const controllerLockKey = `${KEYS.controller}post/ubc/bag/account/wallet`;
 ControllerAccount.createAccountBagProject = function createAccountBagProject(req, res) {
     let accountProject = req.body;
     let authUser = JSON.parse(res.locals.oauth.token.user);
-    let controllerLockKey = `${KEYS.controller}post/ubc/bag/account/wallet:${authUser.accountId}`;
-    console.log(controllerLockKey);
-    return redis.hgetAsync(controllerLockKey).then((locked) => {
+    console.log(`hset ${controllerLockKey}  ${authUser.id} `);
+    return redis.hgetAsync(controllerLockKey, authUser.id).then((locked) => {
         if (locked) {
             res.status(500);
             res.json({
@@ -51,13 +52,12 @@ ControllerAccount.createAccountBagProject = function createAccountBagProject(req
                 message: "正在请求创建钱包"
             });
         } else {
-            return ModelAccount.createAccountBagProject(controllerLockKey, authUser, accountProject, req, res);
+            ModelAccount.createAccountBagProject(controllerLockKey, authUser, accountProject, req, res);
         }
     }).catch((error) => {
         res.status(500);
         res.json(error);
     })
 }
-
 
 module.exports.ControllerAccount = ControllerAccount;

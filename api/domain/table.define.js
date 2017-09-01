@@ -265,9 +265,7 @@ sequelize.sync({ force: false }).then(() => {
         console.log(adminkey);
         console.log('==================================   END   =====================================');
         return redis.hmsetAsync(adminkey, ar);
-    }).then((info) => {
-        console.log(`update redis ok:${info}`)
     }).catch((error) => {
-        console.log(`update redis error:${error}`);
+        console.log(`init redis error:${error}`);
     });
 });

@@ -34,11 +34,47 @@ ModelAccount.createUBCAccount = function createUBCAccount(account, req, res) {
 };
 
 ModelAccount.createAccountBagProject = function createAccountBagProject(controllerLockKey, authedUser, accountProject, req, res) {
-    return redis.hsetAsync(controllerLockKey, true).then((locked) => {
+    redis.hsetAsync(controllerLockKey, authedUser.id, true).then((locked) => {
         console.log(`lock ${locked} the request ${req.url}`);
-        return sequelize.transaction().then((trans) => {
-            return DomainBagProject.findOrCreate({
-                wheres: {
+        sequelize.transaction((trans) => {
+            return new Promise((resolve, reject) => {
+                switch (accountProject.symbol) {
+                    case 'eth':
+                        resolve(ChainEthereumModel.createAccount(accountProject.password, authedUser.accountId));
+                    default:
+                        reject({
+                            code: 10004,
+                            message: "unkown symbol"
+                        });
+                };
+            }).then((walletResult) => {
+                if (walletResult.error) {
+                    throw {
+                        code: 10003,
+                        message: "没有创建成功",
+                        error
+                    }
+                } else {
+                    DomainAccountProject.create({
+                        projectAppellation: accountProjec.appellation,
+                        projectSymbol: accountProject.symbol,
+                        projectIcon: accountProject.icon,
+                        status: 'locked',
+                        accountAddress: walletAddress.result,
+                        accountValue: 0
+                    }, {
+                        transaction: trans
+                    });
+                };
+            }).then((projectInstance) => {
+                res.status(200);
+                res.json(projectInstance.toJSON());
+            });
+        }).then((trans) => {
+            return trans.commit();
+        }).then(() => {
+            DomainBagProject.findOrCreate({
+                where: {
                     publicType: accountProject.walletType,
                     projectAppellation: accountProject.appellation
                 },
@@ -49,36 +85,10 @@ ModelAccount.createAccountBagProject = function createAccountBagProject(controll
                     icon: accountProject.icon
                 },
                 transaction: trans
-            }).then((array) => {
-                let pj = array[0].toJSON();
-                switch (pj.symbol) {
-                    case 'eth':
-                        return ChainEthereumModel.createAccount(accountProject.password, authedUser.accountId);
-                    default:
-                        return {};
-                }
-            }).then((walletResult) => {
-                if (walletResult.address) {
-                    DomainAccountProject.create({
-                        projectAppellation: accountProjec.appellation,
-                        projectSymbol: accountProject.symbol,
-                        projectIcon: accountProject.icon,
-                        status: 'locked',
-                        accountAddress: walletAddress.address,
-                        accountValue: 0
-                    }, {
-                        transaction: trans
-                    });
-                } else {
-                    throw {
-                        code: 10003,
-                        message: "没有创建成功"
-                    }
-                }
-            }).then((projectInstance) => {
-                res.status(200);
-                res.json(projectInstance.toJSON());
-            });
+            })
+        }).catch((error) => {
+            res.status(500);
+            res.json(error.message);
         })
     });
 }
