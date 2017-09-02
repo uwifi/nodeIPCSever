@@ -15,9 +15,8 @@ ChainEthereumModel.createAccount = function createAccount(password, accountId) {
                 "method": "personal_newAccount",
                 "params": [password],
                 "id": accountId
-            }))
+            }));
         });
-
         let dataString = '';
         client.on("data", (data) => {
             dataString += data.toString();
@@ -31,5 +30,6 @@ ChainEthereumModel.createAccount = function createAccount(password, accountId) {
                 resolve(result);
             }
         });
-    })
-}
+        return client;
+    });
+};

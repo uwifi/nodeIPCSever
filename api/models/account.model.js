@@ -34,61 +34,41 @@ ModelAccount.createUBCAccount = function createUBCAccount(account, req, res) {
 };
 
 ModelAccount.createAccountBagProject = function createAccountBagProject(controllerLockKey, authedUser, accountProject, req, res) {
-    redis.hsetAsync(controllerLockKey, authedUser.id, true).then((locked) => {
-        console.log(`lock ${locked} the request ${req.url}`);
-        sequelize.transaction((trans) => {
-            return new Promise((resolve, reject) => {
-                switch (accountProject.symbol) {
-                    case 'eth':
-                        resolve(ChainEthereumModel.createAccount(accountProject.password, authedUser.accountId));
-                    default:
-                        reject({
-                            code: 10004,
-                            message: "unkown symbol"
-                        });
-                };
-            }).then((walletResult) => {
-                if (walletResult.error) {
-                    throw {
-                        code: 10003,
-                        message: "没有创建成功",
-                        error
-                    }
-                } else {
-                    DomainAccountProject.create({
-                        projectAppellation: accountProjec.appellation,
-                        projectSymbol: accountProject.symbol,
-                        projectIcon: accountProject.icon,
-                        status: 'locked',
-                        accountAddress: walletAddress.result,
-                        accountValue: 0
-                    }, {
-                        transaction: trans
+    let pj;
+    return sequelize.transaction((trans) => {
+        return new Promise((resolve, reject) => {
+            switch (accountProject.symbol) {
+                case 'eth':
+                    resolve(ChainEthereumModel.createAccount(accountProject.password, authedUser.accountId));
+                    break;
+                default:
+                    reject({
+                        code: 10004,
+                        message: "unkown symbol"
                     });
-                };
-            }).then((projectInstance) => {
-                res.status(200);
-                res.json(projectInstance.toJSON());
-            });
-        }).then((trans) => {
-            return trans.commit();
-        }).then(() => {
-            DomainBagProject.findOrCreate({
-                where: {
-                    publicType: accountProject.walletType,
-                    projectAppellation: accountProject.appellation
-                },
-                defaults: {
-                    publicType: accountProject.walletType,
+            };
+        }).then((walletResult) => {
+            if (walletResult.error) {
+                throw {
+                    code: 10003,
+                    message: "没有创建成功",
+                    error
+                }
+            } else {
+                return DomainAccountProject.create({
                     projectAppellation: accountProject.appellation,
-                    symbol: accountProject.symbol,
-                    icon: accountProject.icon
-                },
-                transaction: trans
-            })
-        }).catch((error) => {
-            res.status(500);
-            res.json(error.message);
-        })
+                    projectSymbol: accountProject.symbol,
+                    projectIcon: accountProject.icon,
+                    status: 'locked',
+                    accountAddress: walletResult.result,
+                    accountValue: 0
+                }, {
+                    transaction: trans
+                });
+            };
+        }).then((projectInstance) => {
+            pj = projectInstance.toJSON();
+            return pj;
+        });
     });
 }

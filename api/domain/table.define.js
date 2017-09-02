@@ -145,7 +145,16 @@ model.DomainAccountProject = sequelize.define("t_account_bag_project", {
     accountValue: {
         type: Sequelize.DOUBLE,
         field: "account_value"
+    },
+    account: {
+        type: Sequelize.STRING,
+        field: "account"
+    },
+    accountId: {
+        type: Sequelize.INTEGER,
+        field: "account_id"
     }
+        
 });
 
 model.DomainAccountItem = sequelize.define("t_account_bag_item", {
@@ -188,6 +197,14 @@ model.DomainAccountItem = sequelize.define("t_account_bag_item", {
     accountValue: {
         type: Sequelize.DOUBLE,
         field: "account_value"
+    },
+    account: {
+        type: Sequelize.STRING,
+        field: "account"
+    },
+    accountId: {
+        type: Sequelize.INTEGER,
+        field: "account_id"
     }
 });
 

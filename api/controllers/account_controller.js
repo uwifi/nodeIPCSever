@@ -40,24 +40,27 @@ function checkoutAccount(account) {
 
 
 const controllerLockKey = `${KEYS.controller}post/ubc/bag/account/wallet`;
+var createAccountMap = new Map();
 ControllerAccount.createAccountBagProject = function createAccountBagProject(req, res) {
     let accountProject = req.body;
     let authUser = JSON.parse(res.locals.oauth.token.user);
-    console.log(`hset ${controllerLockKey}  ${authUser.id} `);
-    return redis.hgetAsync(controllerLockKey, authUser.id).then((locked) => {
-        if (locked) {
-            res.status(500);
-            res.json({
-                cold: 10002,
-                message: "正在请求创建钱包"
-            });
-        } else {
-            ModelAccount.createAccountBagProject(controllerLockKey, authUser, accountProject, req, res);
-        }
-    }).catch((error) => {
+    if (controllerLockKey in createAccountMap) {
         res.status(500);
-        res.json(error);
-    })
+        res.json({
+            cold: 10002,
+            message: "正在请求创建钱包"
+        });
+        return null;
+    } else {
+        createAccountMap.set(controllerLockKey, true);
+        return ModelAccount.createAccountBagProject(controllerLockKey, authUser, accountProject, req, res).then((pj) => {
+            console.log(pj);
+            return pj;
+        }).catch((error) => {
+            res.status(500);
+            res.json(error);
+        });
+    };
 }
 
 module.exports.ControllerAccount = ControllerAccount;
