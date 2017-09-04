@@ -8,6 +8,7 @@ const TABLE_DEFINE = require("../domain/table.define");
 const DomainAccount = TABLE_DEFINE.DomainAccount;
 const DomainBagProject = TABLE_DEFINE.DomainBagProject;
 const DomainAccountProject = TABLE_DEFINE.DomainAccountProject;
+const DomainAccountItem = TABLE_DEFINE.DomainAccountItem;
 
 var ModelAccount = module.exports;
 
@@ -33,7 +34,7 @@ ModelAccount.createUBCAccount = function createUBCAccount(account, req, res) {
     });
 };
 
-ModelAccount.createAccountBagProject = function createAccountBagProject(controllerLockKey, authedUser, accountProject, req, res) {
+ModelAccount.createAccountBagProject = function createAccountBagProject(authedUser, accountProject, req, res) {
     let pj;
     return sequelize.transaction((trans) => {
         return new Promise((resolve, reject) => {
@@ -71,4 +72,36 @@ ModelAccount.createAccountBagProject = function createAccountBagProject(controll
             return pj;
         });
     });
+};
+
+ModelAccount.queryAccountBagProject = function queryAccountBagProject(authUser, req, res) {
+    return DomainAccountProject.findAll({
+        where: {
+            accountId: authUser.accountId,
+            account: authUser.id
+        }
+    }).then((instanceArray) => {
+        return instanceArray.map((ele) => ele.toJSON());
+    });
 }
+
+ModelAccount.createAccountBagItem = function createAccountBagItem(authUser, accountItem, req, res) {
+    let ij;
+    let item = Object.assign({}, accountItem);
+    item.account = authUser.id;
+    item.accountId = authUser.accountId
+    return DomainAccountItem.create(item).then((itemInstance) => {
+        return itemInstance.toJSON();
+    });
+};
+ModelAccount.queryAccountBagItem = function queryAccountBagItem(authUser, req, res) {
+    let projectAddress = req.params.projectAddress;
+    return DomainAccountItem.findAll({
+        where: {
+            accountId: authUser.accountId,
+            projectAddress: projectAddress
+        }
+    }).then((instanceArray) => {
+        return instanceArray.map(ele => ele.toJSON);
+    })
+};

@@ -53,14 +53,57 @@ ControllerAccount.createAccountBagProject = function createAccountBagProject(req
         return null;
     } else {
         createAccountMap.set(controllerLockKey, true);
-        return ModelAccount.createAccountBagProject(controllerLockKey, authUser, accountProject, req, res).then((pj) => {
+        return ModelAccount.createAccountBagProject(authUser, accountProject, req, res).then((pj) => {
             console.log(pj);
-            return pj;
+            res.status(200);
+            res.json(pj);
+            createAccountMap.delete(controllerLockKey);
         }).catch((error) => {
             res.status(500);
             res.json(error);
         });
     };
+};
+
+ControllerAccount.getAccountBagProject = function queryAccountBagProject(req, res) {
+    let authUser = JSON.parse(res.locals.oauth.token.user);
+    return ModelAccount.queryAccountBagProject(authUser, req, res).then((projectJsonList) => {
+        console.log(projectJsonList);
+        res.status(200);
+        res.json({
+            data: projectJsonList
+        });
+    }).catch((error) => {
+        res.status(500);
+        res.json(error);
+    });
+}
+
+ControllerAccount.createAccountBagItem = function createAccountBagItem(req, res) {
+    let accountItem = req.body;
+    let authUser = JSON.parse(res.locals.oauth.token.user);
+    return ModelAccount.createAccountBagItem(authUser, accountItem, req, res).then((ij) => {
+        console.log(ij);
+        res.status(200);
+        res.json(ij);
+    }).catch((error) => {
+        res.status(500);
+        res.json(error);
+    });
+};
+ControllerAccount.getAccountBagItem = function queryAccountBagItem(req, res) {
+    let authUser = JSON.parse(res.locals.oauth.token.user);
+    return ModelAccount.queryAccountBagItem(authUser, req, res).then((itemJsonList) => {
+        console.log(itemJsonList);
+        res.status(200);
+        res.json({
+            data: itemJsonList
+        });
+    }).catch((error) => {
+        res.status(500);
+        res.json(error);
+    });
+
 }
 
 module.exports.ControllerAccount = ControllerAccount;
