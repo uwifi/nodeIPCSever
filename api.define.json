@@ -176,7 +176,48 @@
                 }
             }
         },
-        "/account/item": {
+        "/account/wallet/project": {
+            "get": {
+                "security": "authed",
+                "level": "1",
+                "response": {
+                    "200": {
+                        "description": "创建的钱包信息",
+                        "schema": {
+                            "$ref": "#/definitions/AccountBagProject",
+                            "type": "array"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/wallet/project/:projectAddress": {
+            "get": {
+                "security": "authed",
+                "level": "1",
+                "response": {
+                    "200": {
+                        "description": "创建的钱包信息",
+                        "schema": {
+                            "$ref": "#/definitions/AccountBagProject"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/wallet/item": {
             "post": {
                 "security": "authed",
                 "level": "3",
@@ -207,6 +248,26 @@
                     "description": "url",
                     "type": "string"
                 }],
+                "response": {
+                    "200": {
+                        "description": "创建的钱包资产",
+                        "schema": {
+                            "$ref": "#/definitions/AccountBagItem"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/wallet/item/:projectAddress": {
+            "post": {
+                "security": "authed",
+                "level": "3",
                 "response": {
                     "200": {
                         "description": "创建的钱包资产",

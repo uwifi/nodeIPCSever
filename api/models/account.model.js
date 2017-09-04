@@ -62,7 +62,9 @@ ModelAccount.createAccountBagProject = function createAccountBagProject(authedUs
                     projectIcon: accountProject.icon,
                     status: 'locked',
                     accountAddress: walletResult.result,
-                    accountValue: 0
+                    accountValue: 0,
+                    account: authedUser.id,
+                    accoutnId: authedUser.accountId
                 }, {
                     transaction: trans
                 });
@@ -83,7 +85,18 @@ ModelAccount.queryAccountBagProject = function queryAccountBagProject(authUser, 
     }).then((instanceArray) => {
         return instanceArray.map((ele) => ele.toJSON());
     });
-}
+};
+ModelAccount.getProjectBydId = function getProjectBydId(authUser, req, res) {
+    let projectId = req.params.projectId;
+    return DomainAccountProject.findOne({
+        where: {
+            accountId: authUser.accountId,
+            id: projectId
+        }
+    }).then((projectInstance) => {
+        return projectInstance.toJSON();
+    });
+};
 
 ModelAccount.createAccountBagItem = function createAccountBagItem(authUser, accountItem, req, res) {
     let ij;
@@ -103,5 +116,12 @@ ModelAccount.queryAccountBagItem = function queryAccountBagItem(authUser, req, r
         }
     }).then((instanceArray) => {
         return instanceArray.map(ele => ele.toJSON);
-    })
+    });
+};
+
+ModelAccount.transferCurrency = function transferCurrency(authUser, req, res) {
+    return {
+        code: 10005,
+        message: "还在开发中，需要设计复式记账的数据结构"
+    };
 };

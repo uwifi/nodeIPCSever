@@ -191,7 +191,7 @@ model.DomainAccountItem = sequelize.define("t_account_bag_item", {
     },
     projectAddress: {
         type: Sequelize.STRING,
-        field: "account_address"
+        field: "project_address"
     },
     accountValue: {
         type: Sequelize.DOUBLE,
@@ -208,7 +208,7 @@ model.DomainAccountItem = sequelize.define("t_account_bag_item", {
 }, {
     indexes: [{
         unique: true,
-        fields: ["itemAddress", "projectAddress", "account"]
+        fields: ["item_address", "project_address", "account"]
     }]
 });
 
