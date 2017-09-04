@@ -64,13 +64,22 @@ ModelAccount.createAccountBagProject = function createAccountBagProject(authedUs
                     accountAddress: walletResult.result,
                     accountValue: 0,
                     account: authedUser.id,
-                    accoutnId: authedUser.accountId
+                    accountId: authedUser.accountId
                 }, {
                     transaction: trans
                 });
             };
         }).then((projectInstance) => {
             pj = projectInstance.toJSON();
+            return DomainAccountItem.create({
+                projectAddress: pj.accountAddress,
+                symbol: pj.symbol,
+                itemAppellation: pj.projectAppellation,
+                account: pj.account,
+                accountId: pj.accountId
+            });
+        }).then((itemInstance) => {
+            let ij = itemInstance.toJSON();
             return pj;
         });
     });

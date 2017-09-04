@@ -21,7 +21,7 @@ app.get("/ubc/bag/account/wallet/project", app.oauth.authenticate(), ControllerA
 app.get('/ubc/bag/account/wallet/:projectAddress', app.oauth.authenticate(), ControllerAccount.getAccountWalletOfProjectAddress);
 
 app.post('/ubc/bag/account/wallet/item', app.oauth.authenticate(), ControllerAccount.createAccountBagItem);
-app.get('/ubc/bag/account/wallet/item/:projectAddress', app.oauth.authenticate(), ControllerAccount.queryAccountBagItem);
+app.get('/ubc/bag/account/wallet/:projectAddress/item', app.oauth.authenticate(), ControllerAccount.queryAccountBagItem);
 
 app.post('/ubc/bag/account/wallet/currency', app.oauth.authenticate(), ControllerAccount.transferCurrency);
 

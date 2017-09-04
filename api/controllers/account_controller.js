@@ -82,7 +82,8 @@ ControllerAccount.queryAccountBagProject = function queryAccountBagProject(req, 
         res.json(error);
     });
 };
-ControllerAccount.getAccountWalletOfProjectId = function getAccountWalletOfProjectId(req, res) {
+
+ControllerAccount.getAccountWalletOfProjectAddress = function getAccountWalletOfProjectAddress(req, res) {
     let authUser = res.locals.oauth.token.user;
     // TODO 需要从redis里返回 数据信息
     return ModelAccount.getProjectBydId(authUser, req, res).then((projectJson) => {

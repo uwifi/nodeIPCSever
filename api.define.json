@@ -264,13 +264,13 @@
                 }
             }
         },
-        "/account/wallet/item/:projectAddress": {
-            "post": {
+        "/account/wallet/:projectAddress/item": {
+            "get": {
                 "security": "authed",
                 "level": "3",
                 "response": {
                     "200": {
-                        "description": "创建的钱包资产",
+                        "description": "获取钱包下列表",
                         "schema": {
                             "$ref": "#/definitions/AccountBagItem"
                         }
