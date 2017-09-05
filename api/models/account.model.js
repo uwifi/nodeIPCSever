@@ -73,7 +73,8 @@ ModelAccount.createAccountBagProject = function createAccountBagProject(authedUs
             pj = projectInstance.toJSON();
             return DomainAccountItem.create({
                 projectAddress: pj.accountAddress,
-                symbol: pj.symbol,
+                itemSymbol: pj.projectSymbol,
+                publicType: pj.projectSymbol,
                 itemAppellation: pj.projectAppellation,
                 account: pj.account,
                 accountId: pj.accountId
@@ -124,7 +125,7 @@ ModelAccount.queryAccountBagItem = function queryAccountBagItem(authUser, req, r
             projectAddress: projectAddress
         }
     }).then((instanceArray) => {
-        return instanceArray.map(ele => ele.toJSON);
+        return instanceArray.map(ele => ele.toJSON());
     });
 };
 
