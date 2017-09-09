@@ -154,7 +154,6 @@ model.DomainAccountProject = sequelize.define("t_account_bag_project", {
         type: Sequelize.INTEGER,
         field: "account_id"
     }
-        
 });
 
 model.DomainAccountItem = sequelize.define("t_account_bag_item", {
@@ -170,12 +169,16 @@ model.DomainAccountItem = sequelize.define("t_account_bag_item", {
         type: Sequelize.STRING,
         field: "item_icon"
     },
+    itemDecimal: {
+        type: Sequelize.INTEGER,
+        field: "item_decimal"
+    },
     itemAddress: {
         type: Sequelize.STRING,
         field: "item_address"
     },
     publicType: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         field: "public_type"
     },
     createdAt: {
@@ -190,13 +193,14 @@ model.DomainAccountItem = sequelize.define("t_account_bag_item", {
     status: {
         type: Sequelize.STRING
     },
-    accountAddress: {
+    projectAddress: {
         type: Sequelize.STRING,
-        field: "account_address"
+        field: "project_address"
     },
     accountValue: {
         type: Sequelize.DOUBLE,
-        field: "account_value"
+        field: "account_value",
+        defaultValue: 0
     },
     account: {
         type: Sequelize.STRING,
@@ -206,6 +210,11 @@ model.DomainAccountItem = sequelize.define("t_account_bag_item", {
         type: Sequelize.INTEGER,
         field: "account_id"
     }
+}, {
+    indexes: [{
+        unique: true,
+        fields: ["item_address", "project_address", "account"]
+    }]
 });
 
 model.DomainAccountItemKeyStore = sequelize.define("t_account_keystore", {

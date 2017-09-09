@@ -164,7 +164,115 @@
                     "200": {
                         "description": "创建的钱包信息",
                         "schema": {
-                            "$ref": "#/definitions/BagProject"
+                            "$ref": "#/definitions/AccountBagProject"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/wallet/project": {
+            "get": {
+                "security": "authed",
+                "level": "1",
+                "response": {
+                    "200": {
+                        "description": "创建的钱包信息",
+                        "schema": {
+                            "$ref": "#/definitions/AccountBagProject",
+                            "type": "array"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/wallet/project/:projectAddress": {
+            "get": {
+                "security": "authed",
+                "level": "1",
+                "response": {
+                    "200": {
+                        "description": "创建的钱包信息",
+                        "schema": {
+                            "$ref": "#/definitions/AccountBagProject"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/wallet/item": {
+            "post": {
+                "security": "authed",
+                "level": "3",
+                "parameters": [{
+                    "name": "accountProjectAddress",
+                    "in": "body",
+                    "description": "公链地址",
+                    "type": "string",
+                    "required": true
+                }, {
+                    "name": "itemAddress",
+                    "in": "body",
+                    "description": "项目地址",
+                    "type": "string"
+                }, {
+                    "name": "appellation",
+                    "in": "body",
+                    "description": "名称",
+                    "type": "string"
+                }, {
+                    "name": "symbol",
+                    "in": "body",
+                    "description": "标示",
+                    "type": "string"
+                }, {
+                    "name": "icon",
+                    "in": "body",
+                    "description": "url",
+                    "type": "string"
+                }],
+                "response": {
+                    "200": {
+                        "description": "创建的钱包资产",
+                        "schema": {
+                            "$ref": "#/definitions/AccountBagItem"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/wallet/:projectAddress/item": {
+            "get": {
+                "security": "authed",
+                "level": "3",
+                "response": {
+                    "200": {
+                        "description": "获取钱包下列表",
+                        "schema": {
+                            "$ref": "#/definitions/AccountBagItem"
                         }
                     },
                     "default": {

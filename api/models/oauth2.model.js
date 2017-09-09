@@ -22,10 +22,10 @@ model.getAccessToken = function(bearerToken) {
         return {
             accessToken: token.accessToken,
             accessTokenExpiresAt: new Date(token.accessTokenExpiresAt),
-            client: token.client,
+            client: JSON.parse(token.client),
             refreshToken: token.refreshToken,
             refreshTokenExpiresAt: new Date(token.refreshTokenExpiresAt),
-            user: token.user
+            user: JSON.parse(token.user)
         };
     });
 };

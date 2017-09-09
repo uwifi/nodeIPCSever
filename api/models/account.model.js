@@ -8,6 +8,7 @@ const TABLE_DEFINE = require("../domain/table.define");
 const DomainAccount = TABLE_DEFINE.DomainAccount;
 const DomainBagProject = TABLE_DEFINE.DomainBagProject;
 const DomainAccountProject = TABLE_DEFINE.DomainAccountProject;
+const DomainAccountItem = TABLE_DEFINE.DomainAccountItem;
 
 var ModelAccount = module.exports;
 
@@ -33,7 +34,7 @@ ModelAccount.createUBCAccount = function createUBCAccount(account, req, res) {
     });
 };
 
-ModelAccount.createAccountBagProject = function createAccountBagProject(controllerLockKey, authedUser, accountProject, req, res) {
+ModelAccount.createAccountBagProject = function createAccountBagProject(authedUser, accountProject, req, res) {
     let pj;
     return sequelize.transaction((trans) => {
         return new Promise((resolve, reject) => {
@@ -61,14 +62,76 @@ ModelAccount.createAccountBagProject = function createAccountBagProject(controll
                     projectIcon: accountProject.icon,
                     status: 'locked',
                     accountAddress: walletResult.result,
-                    accountValue: 0
+                    accountValue: 0,
+                    account: authedUser.id,
+                    accountId: authedUser.accountId
                 }, {
                     transaction: trans
                 });
             };
         }).then((projectInstance) => {
             pj = projectInstance.toJSON();
+            return DomainAccountItem.create({
+                projectAddress: pj.accountAddress,
+                itemSymbol: pj.projectSymbol,
+                publicType: pj.projectSymbol,
+                itemAppellation: pj.projectAppellation,
+                account: pj.account,
+                accountId: pj.accountId
+            });
+        }).then((itemInstance) => {
+            let ij = itemInstance.toJSON();
             return pj;
         });
     });
-}
+};
+
+ModelAccount.queryAccountBagProject = function queryAccountBagProject(authUser, req, res) {
+    return DomainAccountProject.findAll({
+        where: {
+            accountId: authUser.accountId,
+            account: authUser.id
+        }
+    }).then((instanceArray) => {
+        return instanceArray.map((ele) => ele.toJSON());
+    });
+};
+ModelAccount.getProjectBydId = function getProjectBydId(authUser, req, res) {
+    let projectId = req.params.projectId;
+    return DomainAccountProject.findOne({
+        where: {
+            accountId: authUser.accountId,
+            id: projectId
+        }
+    }).then((projectInstance) => {
+        return projectInstance.toJSON();
+    });
+};
+
+ModelAccount.createAccountBagItem = function createAccountBagItem(authUser, accountItem, req, res) {
+    let ij;
+    let item = Object.assign({}, accountItem);
+    item.account = authUser.id;
+    item.accountId = authUser.accountId
+    return DomainAccountItem.create(item).then((itemInstance) => {
+        return itemInstance.toJSON();
+    });
+};
+ModelAccount.queryAccountBagItem = function queryAccountBagItem(authUser, req, res) {
+    let projectAddress = req.params.projectAddress;
+    return DomainAccountItem.findAll({
+        where: {
+            accountId: authUser.accountId,
+            projectAddress: projectAddress
+        }
+    }).then((instanceArray) => {
+        return instanceArray.map(ele => ele.toJSON());
+    });
+};
+
+ModelAccount.transferCurrency = function transferCurrency(authUser, req, res) {
+    return {
+        code: 10005,
+        message: "还在开发中，需要设计复式记账的数据结构"
+    };
+};

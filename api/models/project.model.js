@@ -10,4 +10,6 @@ const DomainBagProject = TABLE_DEFINE.DomainBagProject;
 var ModelProject = module.exports;
 
 
-ModelProject.createBagProject = function createBagProject()
+ModelProject.createBagProject = function createBagProject() {
+
+}
